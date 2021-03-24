@@ -22,7 +22,20 @@ namespace TryLINQ
             //Uppg12(countryArray);
             //Uppg13(countryArray);
             //Uppg14(countryArray);
-
+            //var countries = countryArray.GroupBy(p => (int)p.Population);
+            //var countries = countryArray.Select(c => new { pop = (int)c.Population, name = c.Name })
+            //    .GroupBy(c => c.pop);
+            IEnumerable<IGrouping<int, Countries>> countries =
+                countryArray.GroupBy(c => (int)c.Population);
+                
+            foreach (IGrouping<int, Countries> item in countries)
+            {
+                Console.WriteLine($"Länder med {item.Key} miljoner invånare");
+                foreach (var item1 in countries)
+                {
+                    Console.WriteLine("- " + item1);
+                }
+            }
 
 
         }
