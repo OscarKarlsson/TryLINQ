@@ -6,10 +6,15 @@ namespace TryLINQ
 {
     public static class CountryExtension
     {
-        public static Countries RandomCountry(this IEnumerable<Countries> countries)
+        public static Countries Random(this IEnumerable<Countries> countries)
         {
             Random rnd = new Random();
             return countries.ElementAt(rnd.Next(1, countries.Count()));
+        }
+        public static IEnumerable<Countries> ShuffleCountries(this IEnumerable<Countries> countries)
+        {
+            Random rnd = new Random();
+            return countries.OrderBy(c => rnd.Next());
         }
     }
     class Program
@@ -36,12 +41,24 @@ namespace TryLINQ
             //Uppg18(countryArray);
             //Uppg19(countryArray);
             //Uppg20(countryArray);
+            //Uppg21(countryArray);
 
+
+
+        }
+
+        private static void Uppg21(IEnumerable<Countries> countryArray)
+        {
+            var countries = countryArray.ShuffleCountries();
+            foreach (var item in countries)
+            {
+                Console.WriteLine(item.Name);
+            }
         }
 
         private static void Uppg20(IEnumerable<Countries> countryArray)
         {
-            var country = countryArray.RandomCountry();
+            var country = countryArray.Random();
             Console.WriteLine(country.Name);
         }
 
