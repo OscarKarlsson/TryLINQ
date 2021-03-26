@@ -4,6 +4,14 @@ using System.Linq;
 
 namespace TryLINQ
 {
+    public static class CountryExtension
+    {
+        public static Countries RandomCountry(this IEnumerable<Countries> countries)
+        {
+            Random rnd = new Random();
+            return countries.ElementAt(rnd.Next(1, countries.Count()));
+        }
+    }
     class Program
     {
         static void Main(string[] args)
@@ -21,23 +29,88 @@ namespace TryLINQ
             //Uppg11(countryArray);
             //Uppg12(countryArray);
             //Uppg13(countryArray);
-            //Uppg14(countryArray);
-            //var countries = countryArray.GroupBy(p => (int)p.Population);
-            //var countries = countryArray.Select(c => new { pop = (int)c.Population, name = c.Name })
-            //    .GroupBy(c => c.pop);
-            IEnumerable<IGrouping<int, Countries>> countries =
-                countryArray.GroupBy(c => (int)c.Population);
-                
-            foreach (IGrouping<int, Countries> item in countries)
+            //Uppg14(countryArray);            
+            //Uppg15(countryArray);
+            //Uppg16(countryArray);
+            //Uppg17(countryArray);
+            //Uppg18(countryArray);
+            //Uppg19(countryArray);
+            //Uppg20(countryArray);
+
+        }
+
+        private static void Uppg20(IEnumerable<Countries> countryArray)
+        {
+            var country = countryArray.RandomCountry();
+            Console.WriteLine(country.Name);
+        }
+
+        private static void Uppg19(IEnumerable<Countries> countryArray)
+        {
+            var countries = countryArray.Where(c => c.Name.Length == 7);
+            double number = 0;
+            foreach (var item in countries)
             {
-                Console.WriteLine($"Länder med {item.Key} miljoner invånare");
-                foreach (var item1 in countries)
+                number += item.Population;
+            }
+            Console.WriteLine(number);
+        }
+
+        private static void Uppg18(IEnumerable<Countries> countryArray)
+        {
+            var countries = countryArray.OrderBy(c => c.Population).Take(6);
+            double number = 0;
+            foreach (var item in countries)
+            {
+                number += item.Population;
+            }
+            Console.WriteLine(number);
+        }
+
+        private static void Uppg17(IEnumerable<Countries> countryArray)
+        {
+            var countries = countryArray.Select(c => new
+            {
+                name = c.Name,
+                capital = c.Capital
+            })
+                            .OrderBy(str => new string(str.capital.Reverse().ToArray()));
+            foreach (var item in countries)
+            {
+                Console.WriteLine(item.name + " - " + item.capital);
+            }
+        }
+
+        private static void Uppg16(IEnumerable<Countries> countryArray)
+        {
+            var countries = countryArray.Select(c => new
+            {
+                name = c.Name,
+                pop = c.Population * 1000000,
+                area = (c.Population * 1000000) / c.Area
+            })
+                .OrderBy(c => c.pop);
+
+            foreach (var item in countries)
+            {
+                Console.WriteLine(item.name + " - " + item.pop + " - " + item.area);
+            }
+        }
+
+        private static void Uppg15(IEnumerable<Countries> countryArray)
+        {
+            var countries = countryArray.GroupBy(c => (int)c.Population,
+                            c => c.Name,
+                            (key, g) => new { pop = key, names = g.ToList() })
+                            .OrderBy(c => c.pop);
+            foreach (var item in countries)
+            {
+                Console.WriteLine($"Länder med {item.pop} miljoner invånare");
+                foreach (var item1 in item.names)
                 {
-                    Console.WriteLine("- " + item1);
+                    Console.WriteLine(item1);
                 }
             }
-
-
         }
 
         private static void Uppg14(IEnumerable<Countries> countryArray)
@@ -179,7 +252,7 @@ namespace TryLINQ
             return countryList;
         }
     }
-    class Countries
+    public class Countries
     {
         public Countries(string name, string capital, double pop, double area)
         {
